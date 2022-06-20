@@ -6,7 +6,7 @@ app.MapGet("/", () => "Hello World!");
 app.MapGet("/login", () =>
 {
     
-})
+});
 
 app.MapGet("/auth", () =>
 {

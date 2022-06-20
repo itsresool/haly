@@ -1,13 +1,10 @@
 import './App.css'
 
 function App() {
-    let authInSpotify = () => {
-        fetch("/login");
-    };
-
+    const loginUrl = `${import.meta.env.VITE_API_ORIGIN}/login`;
     return (
         <div className="App">
-            <button onClick={authInSpotify}>Auth in Spotify</button>
+            <a href={loginUrl}>Login with Spotify</a>
         </div>
     )
 }
