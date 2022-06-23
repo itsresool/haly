@@ -1,7 +1,7 @@
 import './App.css'
 
 function App() {
-    const loginUrl = `${import.meta.env.VITE_API_ORIGIN}/login`;
+    const loginUrl = `${import.meta.env.VITE_API_ORIGIN}/bff/login`;
     return (
         <div className="App">
             <a href={loginUrl}>Login with Spotify</a>

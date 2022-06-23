@@ -8,9 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="6.0.0" />
-    <PackageReference Include="IdentityModel.AspNetCore" Version="4.2.0" />
-    <PackageReference Include="IdentityModel.OidcClient" Version="5.0.0" />
+    <PackageReference Include="Duende.BFF" Version="1.2.3" />
   </ItemGroup>
 
 </Project>

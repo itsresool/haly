@@ -1,53 +1,50 @@
-using IdentityModel.Client;
-using IdentityModel.OidcClient;
-using Microsoft.AspNetCore.Mvc;
-
+// Configure Services
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAccessTokenManagement();
+
+builder.Services.AddBff();
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = "cookie";
+        options.DefaultChallengeScheme = "oauth";
+        options.DefaultSignOutScheme = "oauth";
+    })
+    .AddCookie("cookie", options =>
+    {
+        options.Cookie.Name = "__Host-bff";
+        // options.Cookie.SameSite = SameSiteMode.Strict;
+    })
+    .AddOAuth("oauth", options =>
+    {
+        var config = builder.Configuration;
+
+        options.AuthorizationEndpoint = "https://accounts.spotify.com/authorize";
+        options.TokenEndpoint = "https://accounts.spotify.com/api/token";
+        options.ClientId = config.GetValue<string>("Spotify:ClientId");
+        options.ClientSecret = config.GetValue<string>("Spotify:ClientSecret");
+        options.UsePkce = true;
+        options.CallbackPath = config.GetValue<string>("Spotify:RedirectUri");
+        
+        // save tokens into authentication session
+        // to enable automatic token management
+        options.SaveTokens = true;
+        
+        // Add scopes
+        options.Scope.Clear();
+        foreach (var scope in config.GetValue<string>("Spotify:Scope", "").Split(' '))
+        {
+           options.Scope.Add(scope); 
+        }
+    });
+builder.Services.AddAuthorization();
+
+// Configure App
 var app = builder.Build();
-var codeVerifier = "";
+app.UseAuthentication();
+app.UseRouting();
+app.UseBff();
+app.UseAuthorization();
+app.MapBffManagementEndpoints();
 
 app.MapGet("/", () => "Hello World!");
-
-app.MapGet("/login", async ([FromServices] IConfiguration config) =>
-{
-    var options = new OidcClientOptions()
-    {
-        Authority = "https://accounts.spotify.com",
-        ClientId = config.GetValue<string>("Spotify:ClientId"),
-        RedirectUri = config.GetValue<string>("Spotify:RedirectUri"),
-        Scope = config.GetValue<string>("Spotify:Scope"),
-    };
-    var client = new OidcClient(options);
-    var state = await client.PrepareLoginAsync();
-    codeVerifier = state.CodeVerifier;
-
-    return Results.Redirect(state.StartUrl);
-});
-
-app.MapGet("/login/callback", async ([FromServices] IConfiguration config, [FromQuery] string code) =>
-{
-    var client = new HttpClient();
-    var request = new AuthorizationCodeTokenRequest()
-    {
-        Address = "https://accounts.spotify.com/api/token",
-        ClientId = config.GetValue<string>("Spotify:ClientId"),
-        ClientSecret = config.GetValue<string>("Spotify:ClientSecret"),
-        RedirectUri = config.GetValue<string>("Spotify:RedirectUri"),
-        Code = code,
-        CodeVerifier = codeVerifier,
-    };
-
-    var response = await client.RequestAuthorizationCodeTokenAsync(request);
-    client.RequestRefreshTokenAsync();
-    Console.WriteLine($"Access token is {response.AccessToken}");
-});
-
-app.MapGet("/login/refresh", () =>
-{
-    // We will be notified 1 minute before the token expires
-    // Refresh it and replace our tokens
-    return Results.Ok();
-});
 
 app.Run();
