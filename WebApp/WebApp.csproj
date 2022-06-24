@@ -7,8 +7,4 @@
     <UserSecretsId>f748e6f7-03fd-48d1-86ee-b536465c04ff</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Duende.BFF" Version="1.2.3" />
-  </ItemGroup>
-
 </Project>

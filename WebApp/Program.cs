@@ -1,17 +1,18 @@
-// Configure Services
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddBff();
+// Configure Services
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultScheme = "cookie";
         options.DefaultChallengeScheme = "oauth";
-        options.DefaultSignOutScheme = "oauth";
     })
     .AddCookie("cookie", options =>
     {
-        options.Cookie.Name = "__Host-bff";
-        // options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.Name = "HalyOAuth";
+        options.Cookie.SameSite = SameSiteMode.Lax;
     })
     .AddOAuth("oauth", options =>
     {
@@ -24,8 +25,10 @@ builder.Services.AddAuthentication(options =>
         options.UsePkce = true;
         options.CallbackPath = config.GetValue<string>("Spotify:RedirectUri");
         
-        // save tokens into authentication session
-        // to enable automatic token management
+        // Our app only runs on localhost using http, so default value of None does not work
+        options.CorrelationCookie.SameSite = SameSiteMode.Lax;
+        
+        // Save tokens into authentication session
         options.SaveTokens = true;
         
         // Add scopes
@@ -35,16 +38,26 @@ builder.Services.AddAuthentication(options =>
            options.Scope.Add(scope); 
         }
     });
-builder.Services.AddAuthorization();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+});
 
 // Configure App
 var app = builder.Build();
 app.UseAuthentication();
-app.UseRouting();
-app.UseBff();
 app.UseAuthorization();
-app.MapBffManagementEndpoints();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", async (HttpContext ctx) =>
+{
+    // var claims = ctx.User.Claims;
+    var accessToken = await ctx.GetTokenAsync("oauth", "access_token");
 
+    Console.WriteLine($"Your access token is: {accessToken}"); 
+
+   return "Hello World";
+});
+
+app.MapGet("/bff/login", () => Results.Redirect("/"));
 app.Run();
