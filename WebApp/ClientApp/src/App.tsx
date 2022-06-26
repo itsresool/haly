@@ -21,7 +21,7 @@ function App() {
 
     async function fetchPlaylists() {
         try {
-            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/playlist`, {headers: {"X-HalyToken": auth.user?.access_token!}})
+            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/playlist`, {headers: {"x-haly-token": auth.user?.access_token!}})
             if (resp.ok) {
                 console.log(resp.statusText);
             }
