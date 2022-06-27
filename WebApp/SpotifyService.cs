@@ -4,10 +4,6 @@ public class SpotifyService
 {
     private readonly HttpClient _httpClient;
 
-    //
-    // public async Task<IEnumerable<GitHubBranch>?> GetAspNetCoreDocsBranchesAsync() =>
-    //     await _httpClient.GetFromJsonAsync<IEnumerable<GitHubBranch>>(
-    //         "repos/dotnet/AspNetCore.Docs/branches");
     public SpotifyService(HttpClient httpClient)
     {
         _httpClient = httpClient;

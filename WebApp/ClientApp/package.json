@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "oidc-client-ts": "^2.0.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-oidc-context": "^2.1.0"

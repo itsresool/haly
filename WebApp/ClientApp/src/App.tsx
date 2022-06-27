@@ -3,21 +3,7 @@ import {useAuth} from "react-oidc-context";
 
 function App() {
     const auth = useAuth()
-
-    switch (auth.activeNavigator) {
-        case "signinSilent":
-            return <div>Signing you in...</div>;
-        case "signoutRedirect":
-            return <div>Signing you out...</div>;
-    }
-
-    if (auth.isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (auth.error) {
-        return <div>Oops... {auth.error.message}</div>;
-    }
+    console.log(auth)
 
     async function fetchPlaylists() {
         try {
@@ -29,11 +15,16 @@ function App() {
         }
     }
 
+    if (auth.error) {
+        // TODO: show toast when in error state
+        console.log(`OAuth auth error ${auth.error.message}`);
+    }
+
     if (auth.isAuthenticated) {
-        console.log(auth.user?.access_token);
         return (
             <div>
-                Hello {auth.user?.profile.sub}{" "}
+                Hello there!
+                <br/>
                 <button onClick={() => void auth.removeUser()}>Log out</button>
                 <button onClick={() => fetchPlaylists()}>Show user playlists</button>
             </div>
@@ -42,6 +33,7 @@ function App() {
 
     return (
         <div className="App">
+            <h1>HALY</h1>
             <button onClick={() => void auth.signinRedirect()}>Log in</button>
         </div>
     )
