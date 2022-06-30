@@ -1,9 +1,9 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
-import {AuthProvider, AuthProviderProps} from "react-oidc-context";
-import {WebStorageStateStore} from "oidc-client-ts";
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { AuthProvider, AuthProviderProps } from "react-oidc-context";
+import { WebStorageStateStore } from "oidc-client-ts";
 
 const oAuthConfig: AuthProviderProps = {
     // Their authority endpoint is blocked by CORS, so we need to specify
@@ -18,23 +18,19 @@ const oAuthConfig: AuthProviderProps = {
     client_secret: import.meta.env.VITE_OAUTH_CLIENT_SECRET,
     redirect_uri: import.meta.env.VITE_OAUTH_REDIRECT_URI,
     scope: import.meta.env.VITE_OAUTH_SCOPE,
-    userStore: new WebStorageStateStore({store: window.localStorage}),
+    userStore: new WebStorageStateStore({ store: window.localStorage }),
     revokeTokensOnSignout: true,
-    onSigninCallback
-}
+    onSigninCallback,
+};
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <AuthProvider {...oAuthConfig}>
-            <App/>
+            <App />
         </AuthProvider>
-    </React.StrictMode>
-)
+    </React.StrictMode>,
+);
 
 function onSigninCallback() {
-    window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname
-    )
+    window.history.replaceState({}, document.title, window.location.pathname);
 }

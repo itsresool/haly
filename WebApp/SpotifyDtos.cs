@@ -2,18 +2,36 @@ using System.Text.Json.Serialization;
 
 namespace Haly.WebApp;
 
-public class SpotifyDtos
+public record SpotifyDtos
 {
-    public class PaginatedResponse<T>
+    public record PaginatedResponse<T>
     {
-        public int Total { get; set; }
-        public IEnumerable<T> Items { get; set; }
+        public PaginatedResponse(int total, IEnumerable<T> items)
+        {
+            Total = total;
+            Items = items;
+        }
+
+        public int Total { get; init; }
+        public IEnumerable<T> Items { get; init; }
     }
 
-    public class UserPlaylists
+    public record UserPlaylists
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        [JsonPropertyName(("public"))] public bool IsPublic { get; set; }
+        public string Id { get; init; }
+
+        public string Name { get; init; }
+
+        [JsonPropertyName("public")]
+        public bool IsPublic { get; init; }
+
+        public ApiDtos.Playlist Map()
+        {
+            return new()
+            {
+                Id = Id,
+                Name = Name,
+            };
+        }
     }
 }

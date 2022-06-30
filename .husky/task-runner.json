@@ -1,0 +1,45 @@
+{
+    "tasks": [
+        {
+            "name": "Format .NET code",
+            "command": "dotnet",
+            "args": ["format", "--include", "${staged}"],
+            "include": ["**/*.cs", "**/*.razor", "**/*.cshtml"]
+        },
+        {
+            "name": "Prettier",
+            "pathMode": "absolute",
+            "command": "npx",
+            "cwd": "WebApp/ClientApp",
+            "args": ["prettier", "--write", "${staged}"],
+            "include": [
+                "**/*.js",
+                "**/*.ts",
+                "**/*.jsx",
+                "**/*.tsx",
+                "**/*.css",
+                "**/*.less",
+                "**/*.scss",
+                "**/*.html",
+                "**/*.json",
+                "**/*.md"
+            ]
+        },
+        {
+            "name": "Eslint",
+            "pathMode": "absolute",
+            "command": "npx",
+            "cwd": "WebApp/ClientApp",
+            "args": ["eslint", "${staged}"],
+            "include": ["**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx"]
+        },
+        {
+            "name": "Stylelint",
+            "pathMode": "absolute",
+            "command": "npx",
+            "cwd": "WebApp/ClientApp",
+            "args": ["stylelint", "${staged}"],
+            "include": ["**/*.css", "**/*.less", "**/*.scss"]
+        }
+    ]
+}

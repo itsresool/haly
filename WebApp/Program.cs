@@ -9,6 +9,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
     policy.AllowAnyHeader();
 }));
 builder.Services.AddHttpClient<SpotifyService>();
+builder.Services.AddHttpContextAccessor();
 
 // Configure App
 var app = builder.Build();
@@ -19,18 +20,11 @@ if (app.Environment.IsProduction())
     app.UseStaticFiles();
 }
 
-app.MapGet("/playlist", async (HttpContext ctx, [FromServices] SpotifyService spotifyService) =>
+app.MapGet("/playlist", async ([FromServices] SpotifyService spotifyService) =>
 {
-    var accessToken = ctx.Request.Headers["x-haly-token"];
+    var resp = await spotifyService.GetUserPlaylists();
 
-    var resp = await spotifyService.GetUserPlaylists(accessToken);
-
-    if (resp != null)
-    {
-        Console.WriteLine(resp.Total);
-    }
-
-    return "Hello World";
+    return resp?.Items.Select(i => i.Map());
 });
 
 app.MapGet("/hello", () =>

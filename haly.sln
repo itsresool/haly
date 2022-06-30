@@ -5,6 +5,17 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{FE74E7CB-EF44-4774-90A5-4ADB6908B8FC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44CC07C3-E7F1-47E0-A017-B9BADD50317A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		.prettierrc = .prettierrc
+		.config/dotnet-tools.json = .config/dotnet-tools.json
+		.husky/task-runner.json = .husky/task-runner.json
+		.stylelintrc.json = .stylelintrc.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
