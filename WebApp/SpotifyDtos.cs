@@ -19,19 +19,16 @@ public record SpotifyDtos
     public record UserPlaylists
     {
         public string Id { get; init; }
-
         public string Name { get; init; }
 
         [JsonPropertyName("public")]
         public bool IsPublic { get; init; }
 
-        public ApiDtos.Playlist Map()
-        {
-            return new()
+        public ApiDtos.Playlist Map() =>
+            new()
             {
                 Id = Id,
-                Name = Name,
+                Name = Name
             };
-        }
     }
 }

@@ -1,15 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Haly.WebApp</RootNamespace>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <AnalysisMode>Recommended</AnalysisMode>
+        <UserSecretsId>f748e6f7-03fd-48d1-86ee-b536465c04ff</UserSecretsId>
+    </PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Haly.WebApp</RootNamespace>
-    <UserSecretsId>f748e6f7-03fd-48d1-86ee-b536465c04ff</UserSecretsId>
-  </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="wwwroot"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot" />
-  </ItemGroup>
+    <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
+        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High"/>
+        <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".."/>
+    </Target>
 
 </Project>

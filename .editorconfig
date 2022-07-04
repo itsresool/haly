@@ -8,14 +8,22 @@ end_of_line = lf
 insert_final_newline = true
 
 [*.cs]
-# Used by JetBrains Rider 
-csharp_default_private_modifier = explicit
-csharp_braces_for_ifelse = required_for_multiline_statement
-csharp_for_built_in_types = use_var
-csharp_trailing_comma_in_multiline_lists = true
-csharp_object_creation_when_type_not_evident = target_typed
-csharp_place_attribute_on_same_line = never
-csharp_arguments_literal = named
+# Resharper rules (remove them, when they are added to dotnet_diagnostic)
+resharper_csharp_trailing_comma_in_multiline_lists = true
+resharper_csharp_place_attribute_on_same_line = never
+resharper_csharp_arguments_literal = named
+resharper_arguments_style_literal_highlighting = suggestion
+
+# IDE0007: Use var instead of explicit type
+csharp_style_var_for_built_in_types = true
+dotnet_diagnostic.IDE0007.severity = warning
+
+# IDE0040: Accessibility modifiers required
+dotnet_style_require_accessibility_modifiers = for_non_interface_members
+dotnet_diagnostic.IDE0040.severity = warning
+
+# IDE0090: Simplify new expression
+dotnet_diagnostic.IDE0090.severity = warning
 
 # CS8618: Non-nullable field is uninitialized. Consider declaring as nullable.
 dotnet_diagnostic.CS8618.severity = none

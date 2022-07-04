@@ -2,12 +2,14 @@
     "tasks": [
         {
             "name": "Format .NET code",
+            "group": "pre-commit",
             "command": "dotnet",
             "args": ["format", "--include", "${staged}"],
             "include": ["**/*.cs", "**/*.razor", "**/*.cshtml"]
         },
         {
             "name": "Prettier",
+            "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
             "cwd": "WebApp/ClientApp",
@@ -27,6 +29,7 @@
         },
         {
             "name": "Eslint",
+            "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
             "cwd": "WebApp/ClientApp",
@@ -35,6 +38,7 @@
         },
         {
             "name": "Stylelint",
+            "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
             "cwd": "WebApp/ClientApp",
