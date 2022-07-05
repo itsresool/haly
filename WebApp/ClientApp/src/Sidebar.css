@@ -1,0 +1,33 @@
+.Sidebar {
+    width: 240px;
+    background: #001f3f;
+    color: #fff;
+    position: fixed;
+    height: 100%;
+    margin: 0;
+    padding: 12px 12px 0;
+}
+
+.SidebarItem {
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+
+.Sidebar button {
+    color: #fff;
+    background: inherit;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    margin: 12px 0;
+    padding: 0;
+}
+
+.Sidebar hr {
+    margin-bottom: 12px;
+}
+
+.Sidebar a {
+    color: #fff;
+    text-decoration: none;
+}

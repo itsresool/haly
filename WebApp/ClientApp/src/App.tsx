@@ -1,10 +1,16 @@
 import "./App.css";
 import { useAuth } from "react-oidc-context";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
+import Sidebar from "./Sidebar";
+import { Route, Routes } from "react-router-dom";
+import Playlist, { PlaylistDto } from "./Playlist";
 
-function App() {
+type HomeProps = {
+    setPlaylists: Dispatch<SetStateAction<PlaylistDto[]>>;
+};
+
+function Home(props: HomeProps) {
     const auth = useAuth();
-    const [playlists, setPlaylists] = useState<any>([]);
 
     async function fetchPlaylists() {
         try {
@@ -13,12 +19,27 @@ function App() {
             });
             if (resp.ok) {
                 console.log(resp.statusText);
-                setPlaylists(await resp.json());
+                props.setPlaylists(await resp.json());
             }
         } catch (e) {
             console.error(e);
         }
     }
+
+    return (
+        <>
+            <h1>Hello there!</h1>
+            <br />
+            <button onClick={() => void auth.removeUser()}>Log out</button>
+            <button onClick={() => fetchPlaylists()}>Show user playlists</button>
+            <br />
+        </>
+    );
+}
+
+function App() {
+    const auth = useAuth();
+    const [playlists, setPlaylists] = useState<PlaylistDto[]>([]);
 
     if (auth.error) {
         // TODO: show toast when in error state
@@ -28,20 +49,13 @@ function App() {
     if (auth.isAuthenticated) {
         return (
             <div>
-                Hello there!
-                <br />
-                <button onClick={() => void auth.removeUser()}>Log out</button>
-                <button onClick={() => fetchPlaylists()}>Show user playlists</button>
-                <br />
-                {playlists.length > 0 ? (
-                    <ul>
-                        {playlists.map((p: any) => (
-                            <li key={p.id}>{p.name}</li>
-                        ))}
-                    </ul>
-                ) : (
-                    <span>No playlists</span>
-                )}
+                <Sidebar playlists={playlists} />
+                <div className="AppContent">
+                    <Routes>
+                        <Route path="/" element={<Home setPlaylists={setPlaylists} />} />
+                        <Route path="/playlists/:id" element={<Playlist />} />
+                    </Routes>
+                </div>
             </div>
         );
     }

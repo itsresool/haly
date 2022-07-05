@@ -41,3 +41,9 @@
 button {
     font-size: calc(10px + 2vmin);
 }
+
+.AppContent {
+    position: absolute;
+    left: 240px;
+    margin: 40px 20px;
+}

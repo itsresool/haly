@@ -27,9 +27,11 @@ app.MapGet("/playlist", async ([FromServices] SpotifyService spotifyService) =>
     return resp?.Items.Select(i => i.Map());
 });
 
-app.MapGet("/hello", () =>
+app.MapGet("/playlist/{id}", async ([FromServices] SpotifyService spotifyService, string id) =>
 {
-    Console.WriteLine("hello");
-    return "Hello World";
+    var resp = await spotifyService.GetPlaylist(id);
+
+    return resp;
 });
+
 app.Run();

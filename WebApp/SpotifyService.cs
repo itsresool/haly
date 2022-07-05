@@ -20,9 +20,14 @@ public class SpotifyService
         _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", accessToken);
     }
 
-    public Task<SpotifyDtos.PaginatedResponse<SpotifyDtos.UserPlaylists>?> GetUserPlaylists()
+    public Task<SpotifyDtos.PaginatedResponse<SpotifyDtos.UserPlaylist>?> GetUserPlaylists()
     {
-        return _httpClient.GetFromJsonAsync<SpotifyDtos.PaginatedResponse<SpotifyDtos.UserPlaylists>>(
+        return _httpClient.GetFromJsonAsync<SpotifyDtos.PaginatedResponse<SpotifyDtos.UserPlaylist>>(
             "/v1/me/playlists");
+    }
+
+    public Task<SpotifyDtos.Playlist?> GetPlaylist(string id)
+    {
+        return _httpClient.GetFromJsonAsync<SpotifyDtos.Playlist>($"/v1/playlists/{id}");
     }
 }

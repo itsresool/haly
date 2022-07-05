@@ -4,6 +4,7 @@ import App from "./App";
 import "./index.css";
 import { AuthProvider, AuthProviderProps } from "react-oidc-context";
 import { WebStorageStateStore } from "oidc-client-ts";
+import { BrowserRouter } from "react-router-dom";
 
 const oAuthConfig: AuthProviderProps = {
     // Their authority endpoint is blocked by CORS, so we need to specify
@@ -26,7 +27,9 @@ const oAuthConfig: AuthProviderProps = {
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <AuthProvider {...oAuthConfig}>
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </AuthProvider>
     </React.StrictMode>,
 );
