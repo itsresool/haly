@@ -5,11 +5,11 @@
     position: fixed;
     height: 100%;
     margin: 0;
-    padding: 12px 12px 0;
+    padding: 0;
 }
 
 .SidebarItem {
-    margin-bottom: 6px;
+    margin: 0 var(--spotify-logo-space) 6px;
     cursor: pointer;
 }
 
@@ -19,7 +19,7 @@
     outline: none;
     border: none;
     text-decoration: none;
-    margin: 12px 0;
+    margin: 0 var(--spotify-logo-space) 12px;
     padding: 0;
 }
 

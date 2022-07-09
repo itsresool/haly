@@ -12,7 +12,7 @@
             "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
-            "cwd": "WebApp/ClientApp",
+            "cwd": "Haly.WebApp/ClientApp",
             "args": ["prettier", "--write", "${staged}"],
             "include": [
                 "**/*.js",
@@ -32,7 +32,7 @@
             "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
-            "cwd": "WebApp/ClientApp",
+            "cwd": "Haly.WebApp/ClientApp",
             "args": ["eslint", "${staged}"],
             "include": ["**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx"]
         },
@@ -41,7 +41,7 @@
             "group": "pre-commit",
             "pathMode": "absolute",
             "command": "npx",
-            "cwd": "WebApp/ClientApp",
+            "cwd": "Haly.WebApp/ClientApp",
             "args": ["stylelint", "${staged}"],
             "include": ["**/*.css", "**/*.less", "**/*.scss"]
         }

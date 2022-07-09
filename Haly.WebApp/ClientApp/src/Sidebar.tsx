@@ -2,6 +2,7 @@ import "./Sidebar.css";
 import { Link } from "react-router-dom";
 import { PlaylistDto } from "./Playlist";
 import { useAuth } from "react-oidc-context";
+import SpotifyAttribution from "./SpotifyAttribution";
 
 type OwnProps = {
     playlists: PlaylistDto[];
@@ -19,6 +20,7 @@ function Sidebar(props: OwnProps) {
 
     return (
         <ul role="list" className="Sidebar">
+            <SpotifyAttribution />
             <button onClick={() => void auth.removeUser()}>Log out</button>
             <hr />
             {props.playlists.map((p) => {
