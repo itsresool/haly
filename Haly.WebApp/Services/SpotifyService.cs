@@ -1,23 +1,23 @@
 using System.Net.Http.Headers;
+using Haly.GeneratedClients;
 using Haly.WebApp.Extensions;
 
-namespace Haly.WebApp;
+namespace Haly.WebApp.Services;
 
 public class SpotifyService
 {
     private readonly HttpClient _httpClient;
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    public SpotifyClient Client { get; }
 
     public SpotifyService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
     {
         _httpClient = httpClient;
-        _httpContextAccessor = httpContextAccessor;
-
-        _httpClient.BaseAddress = new("https://api.spotify.com");
 
         // GetHalyToken returns an access token for Spotify's API
         var accessToken = httpContextAccessor.HttpContext!.GetHalyToken();
-        _httpClient.DefaultRequestHeaders.Authorization = new("Bearer", accessToken);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            
+        Client = new SpotifyClient(_httpClient);
     }
 
     public Task<SpotifyDtos.PaginatedResponse<SpotifyDtos.UserPlaylist>?> GetUserPlaylists()

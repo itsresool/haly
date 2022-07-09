@@ -1,4 +1,4 @@
-using Haly.WebApp;
+using Haly.WebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 // Configure Services
@@ -22,14 +22,14 @@ if (app.Environment.IsProduction())
 
 app.MapGet("/playlist", async ([FromServices] SpotifyService spotifyService) =>
 {
-    var resp = await spotifyService.GetUserPlaylists();
+    var resp = await spotifyService.Client.GetAListOfCurrentUsersPlaylistsAsync(limit: 20, offset: 0);
 
-    return resp?.Items.Select(i => i.Map());
+    return resp?.Items;
 });
 
 app.MapGet("/playlist/{id}", async ([FromServices] SpotifyService spotifyService, string id) =>
 {
-    var resp = await spotifyService.GetPlaylist(id);
+    var resp = await spotifyService.Client.GetPlaylistAsync(id);
 
     return resp;
 });

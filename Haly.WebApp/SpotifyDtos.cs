@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace Haly.WebApp;
@@ -68,6 +69,6 @@ public record SpotifyDtos
         public Album Album { get; set; }
         public IEnumerable<Artist> Artists { get; set; }
 
-        public string Duration => TimeSpan.FromMilliseconds(DurationInMs).ToString(@"mm\:ss");
+        public string Duration => TimeSpan.FromMilliseconds(DurationInMs).ToString(@"mm\:ss", CultureInfo.InvariantCulture);
     }
 }

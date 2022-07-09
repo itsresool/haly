@@ -19,6 +19,7 @@ export type PlaylistDto = {
                 id: string;
                 name: string;
                 duration: string;
+                duration_ms: number;
             };
         }[];
     };
@@ -68,7 +69,7 @@ function Playlist() {
                         <li className="Track" key={item.track.id}>
                             <div>{item.track.name}</div>
                             <div>{album.name}</div>
-                            <div>{item.track.duration}</div>
+                            <div>{item.track.duration_ms}</div>
                         </li>
                     );
                 })}
