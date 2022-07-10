@@ -30,7 +30,7 @@ function Home(props: HomeProps) {
         <>
             <h1>Hello there!</h1>
             <br />
-            <button onClick={() => void auth.removeUser()}>Log out</button>
+            <button onClick={() => auth.removeUser()}>Log out</button>
             <button onClick={() => fetchPlaylists()}>Show user playlists</button>
             <br />
         </>
@@ -62,7 +62,7 @@ function App() {
 
     if (auth.user && !auth.isAuthenticated) {
         console.log("Trying silent refresh");
-        void auth.signinSilent();
+        auth.signinSilent();
         return (
             <div>
                 <p>If you are stuck on this screen try to log in manually</p>

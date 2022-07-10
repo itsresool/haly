@@ -9,6 +9,8 @@
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
         "plugin:@typescript-eslint/recommended",
+        "plugin:jsx-a11y/recommended",
+        "xo/browser",
         "prettier"
     ],
     "parser": "@typescript-eslint/parser",
@@ -21,7 +23,8 @@
     },
     "plugins": ["react", "@typescript-eslint"],
     "rules": {
-        "@typescript-eslint/no-non-null-assertion": "off"
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "camelcase": "off"
     },
     "settings": {
         "react": {

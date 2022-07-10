@@ -32,23 +32,23 @@ function Playlist() {
 
     console.log(`Playlist ${playlistId}`);
 
-    async function fetchPlaylists() {
-        try {
-            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/playlist/${playlistId}`, {
-                headers: { "x-haly-token": user!.access_token! },
-            });
-            if (resp.ok) {
-                console.log(resp.statusText);
-                setPlaylist(await resp.json());
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
     useEffect(() => {
+        async function fetchPlaylists() {
+            try {
+                const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/playlist/${playlistId}`, {
+                    headers: { "x-haly-token": user!.access_token! },
+                });
+                if (resp.ok) {
+                    console.log(resp.statusText);
+                    setPlaylist(await resp.json());
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
         fetchPlaylists();
-    }, [playlistId]);
+    }, [playlistId, user]);
 
     if (!playlist) {
         return (
@@ -61,15 +61,15 @@ function Playlist() {
     return (
         <div>
             <h1>{playlist.name}</h1>
-            <ul className="Tracklist" role="list">
+            <ul className="Tracklist">
                 {playlist.tracks.items.map((item) => {
-                    const album = item.track.album;
+                    const { id, name, album, duration_ms } = item.track;
 
                     return (
-                        <li className="Track" key={item.track.id}>
-                            <div>{item.track.name}</div>
+                        <li className="Track" key={id}>
+                            <div>{name}</div>
                             <div>{album.name}</div>
-                            <div>{item.track.duration_ms}</div>
+                            <div>{duration_ms}</div>
                         </li>
                     );
                 })}

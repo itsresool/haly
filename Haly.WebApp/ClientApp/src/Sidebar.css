@@ -1,11 +1,30 @@
-.Sidebar {
+.SidebarWrapper {
+    min-width: 100px;
     width: 240px;
-    background: #001f3f;
-    color: #fff;
     position: fixed;
     height: 100%;
+    background: #001f3f;
+    color: #fff;
+    user-select: none;
+}
+
+.Sidebar {
     margin: 0;
     padding: 0;
+    list-style: none;
+}
+
+.Dragger {
+    width: 5px;
+    cursor: ew-resize;
+    padding: 4px 0 0;
+    border-top: 1px solid #ddd;
+    position: absolute;
+    top: -1px;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background-color: deeppink;
 }
 
 .SidebarItem {
