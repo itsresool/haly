@@ -1,9 +1,59 @@
-import "./Sidebar.css";
 import { Link } from "react-router-dom";
 import { PlaylistDto } from "./Playlist";
+import { styled } from "./theme";
 import { useAuth } from "react-oidc-context";
 import SpotifyAttribution from "./SpotifyAttribution";
 import useResize from "./useResize";
+
+const SidebarWrapper = styled("nav", {
+    minWidth: 100,
+    width: 240,
+    position: "fixed",
+    height: "100%",
+    background: "$primary",
+    color: "$white",
+    userSelect: "none",
+});
+
+const Playlists = styled("ul", {
+    margin: 0,
+    padding: 0,
+    listStyle: "none",
+    "& > hr": {
+        marginBottom: "$5",
+    },
+    "& a": {
+        color: "$white",
+        textDecoration: "none",
+    },
+    "& > button": {
+        color: "$white",
+        background: "inherit",
+        outline: "none",
+        border: "none",
+        textDecoration: "none",
+        margin: "0 $spotifyLogo $spotifyLogo",
+        padding: 0,
+    },
+});
+
+const SidebarItem = styled("li", {
+    margin: "0 $spotifyLogo $spotifyLogo",
+    cursor: "pointer",
+});
+
+const Dragger = styled("div", {
+    width: "5px",
+    cursor: "ew-resize",
+    padding: "4px 0 0",
+    borderTop: "1px solid #ddd",
+    position: "absolute",
+    top: "-1px",
+    right: 0,
+    bottom: 0,
+    zIndex: 100,
+    backgroundColor: "deeppink",
+});
 
 type OwnProps = {
     playlists: PlaylistDto[];
@@ -21,24 +71,23 @@ function Sidebar(props: OwnProps) {
             const to = `playlists/${p.id}`;
 
             return (
-                <li className="SidebarItem" key={p.id}>
+                <SidebarItem key={p.id}>
                     <Link to={to}>{p.name}</Link>
-                </li>
+                </SidebarItem>
             );
         });
     }
 
     return (
-        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-        <nav className="SidebarWrapper" style={{ width }} onMouseDown={enableResize}>
-            <ul className="Sidebar">
+        <SidebarWrapper style={{ width }} onMouseDown={enableResize}>
+            <Playlists>
                 <SpotifyAttribution />
                 <button onClick={() => auth.removeUser()}>Log out</button>
                 <hr />
                 {playlistsJsx}
-            </ul>
-            <div className="Dragger" />
-        </nav>
+            </Playlists>
+            <Dragger />
+        </SidebarWrapper>
     );
 }
 

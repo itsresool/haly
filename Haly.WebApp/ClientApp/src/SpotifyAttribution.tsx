@@ -1,8 +1,13 @@
-import "./SpotifyAttribution.css";
 import whiteLogoUrl from "./spotify_logo_white.png";
+import { styled } from "./theme";
+
+const SpotifyLogo = styled("img", {
+    height: "$spotifyLogo",
+    margin: "$spotifyLogo",
+});
 
 function SpotifyAttribution() {
-    return <img src={whiteLogoUrl} alt={"Spotify's Logo"} className="SpotifyLogo" />;
+    return <SpotifyLogo src={whiteLogoUrl} alt="Spotify's Logo" />;
 }
 
 export default SpotifyAttribution;

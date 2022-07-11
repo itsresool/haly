@@ -28,7 +28,7 @@ function Home(props: HomeProps) {
 
     return (
         <>
-            <h1>Hello there!</h1>
+            <h1 style={{ fontSize: "96px" }}>+Jakarta Sans</h1>
             <br />
             <button onClick={() => auth.removeUser()}>Log out</button>
             <button onClick={() => fetchPlaylists()}>Show user playlists</button>
