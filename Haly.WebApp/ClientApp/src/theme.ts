@@ -12,7 +12,7 @@ export const { styled, globalCss } = createStitches({
             white: "#fff",
         },
         fonts: {
-            primary: '"+Jakarta Sans", sans-serif',
+            primary: '"Plus Jakarta Sans", sans-serif',
         },
         space: {
             1: "2px",

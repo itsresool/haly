@@ -8,6 +8,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fontsource/plus-jakarta-sans": "^4.5.8",
         "@stitches/react": "^1.2.8",
         "modern-css-reset": "^1.4.0",
         "oidc-client-ts": "^2.0.5",

@@ -5,7 +5,6 @@ import "./globalStyles";
 import { AuthProvider, AuthProviderProps } from "react-oidc-context";
 import { WebStorageStateStore } from "oidc-client-ts";
 import { BrowserRouter } from "react-router-dom";
-import "../fonts/main.css";
 
 const oAuthConfig: AuthProviderProps = {
     // Their authority endpoint is blocked by CORS, so we need to specify
