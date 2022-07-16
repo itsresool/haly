@@ -1,4 +1,4 @@
-import whiteLogoUrl from "./spotify_logo_white.png";
+import whiteLogoUrl from "../assets/spotify_logo_white.png";
 import { styled } from "./theme";
 
 const SpotifyLogo = styled("img", {

@@ -20,7 +20,7 @@ const Playlists = styled("ul", {
     padding: 0,
     listStyle: "none",
     "& > hr": {
-        marginBottom: "$5",
+        marginBottom: "$500",
     },
     "& a": {
         color: "$white",

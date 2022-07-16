@@ -11,24 +11,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot"/>
+        <Folder Include="wwwroot" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Haly.GeneratedClients\Haly.GeneratedClients.csproj"/>
+        <ProjectReference Include="..\Haly.GeneratedClients\Haly.GeneratedClients.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
     </ItemGroup>
 
     <Target Name="Husky" BeforeTargets="Restore;CollectPackageReferences" Condition="'$(HUSKY)' != 0">
-        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High"/>
-        <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".."/>
+        <Exec Command="dotnet tool restore" StandardOutputImportance="Low" StandardErrorImportance="High" />
+        <Exec Command="dotnet husky install" StandardOutputImportance="Low" StandardErrorImportance="High" WorkingDirectory=".." />
     </Target>
 
 </Project>
