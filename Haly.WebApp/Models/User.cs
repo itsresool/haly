@@ -13,5 +13,5 @@ public class User
     public string Market { get; set; }
     public Plan Plan { get; set; }
 
-    public List<Playlist> Playlists { get; set; }
+    public List<Playlist>? Playlists { get; set; }
 }

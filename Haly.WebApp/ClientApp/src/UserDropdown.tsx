@@ -3,7 +3,8 @@ import { styled } from "./theme";
 import { MdArrowDropDown } from "react-icons/all";
 import { AccessibleIcon } from "@radix-ui/react-accessible-icon";
 import { useAuth } from "react-oidc-context";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { User } from "./App";
 
 const StyledTrigger = styled(DropdownMenu.Trigger, {
     height: "32px",
@@ -59,6 +60,11 @@ const StyledDropdownItem = styled(DropdownMenu.Item, {
         backgroundColor: "$black700HoverOfAHover",
         outline: 0,
     },
+    a: {
+        color: "unset",
+        textDecoration: "none",
+        cursor: "unset",
+    },
 });
 
 const StyledSeparator = styled(DropdownMenu.Separator, {
@@ -66,26 +72,30 @@ const StyledSeparator = styled(DropdownMenu.Separator, {
     backgroundColor: "$black700HoverOfAHover",
 });
 
-function UserDropdown() {
-    const auth = useAuth();
+type OwnProps = {
+    user: User;
+};
 
-    console.log(auth.user);
+function UserDropdown(props: OwnProps) {
+    const auth = useAuth();
+    const navigate = useNavigate();
+
+    const profileHref = `/me`;
+    const appSettingsHref = `${profileHref}/appsettings`;
 
     return (
         <DropdownMenu.Root>
             <StyledTrigger>
-                <StyledTriggerSpan>Username</StyledTriggerSpan>
+                <StyledTriggerSpan>{props.user.name}</StyledTriggerSpan>
                 <AccessibleIcon label="User actions">
                     <StyledArrorDown />
                 </AccessibleIcon>
             </StyledTrigger>
 
             <StyledDropdownContent>
-                <StyledDropdownItem>Profile</StyledDropdownItem>
+                <StyledDropdownItem onClick={() => navigate(profileHref)}>Profile</StyledDropdownItem>
 
-                <StyledDropdownItem>
-                    <Link to="/user/appsettings">Haly Settings</Link>
-                </StyledDropdownItem>
+                <StyledDropdownItem onClick={() => navigate(appSettingsHref)}>Haly Settings</StyledDropdownItem>
 
                 <StyledSeparator />
 

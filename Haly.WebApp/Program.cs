@@ -13,6 +13,7 @@ builder.Services.AddCors(options => options.AddDefaultPolicy(policy =>
 {
     policy.AllowAnyOrigin();
     policy.AllowAnyHeader();
+    policy.AllowAnyMethod();
 }));
 builder.Services.AddHttpClient<SpotifyService>();
 builder.Services.AddHttpContextAccessor();
@@ -42,11 +43,12 @@ app.MapPut("/users/me",
             Market = me.Country,
             Plan = me.Product == "premium" ? Plan.Premium : Plan.Free,
         };
-        var foundUser = await db.Users.FindAsync(user.Id);
+        var foundUser = await db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == user.Id);
 
         if (foundUser is null)
         {
-            await db.Users.AddAsync(user);
+            db.Users.Add(user);
+            await db.SaveChangesAsync();
             return Results.Created($"/users/{user.Id}", user);
         }
 
@@ -62,10 +64,10 @@ app.MapGet("/users/{id}",
 
 app.MapPut("/users/{id}/playlists",
     async ([FromServices] SpotifyService spotifyService, [FromServices] LibraryContext db,
-        [FromServices] IMediator mediator, [FromQuery] string id) =>
+        [FromServices] IMediator mediator, string id) =>
     {
         var resp = await spotifyService.Client.GetAListOfCurrentUsersPlaylistsAsync(limit: 20, offset: 0);
-        var user = await db.FindAsync<User>(id);
+        var user = await db.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
 
         var newPlaylists = new List<Playlist>();
         foreach (var item in resp.Items)
@@ -76,7 +78,7 @@ app.MapPut("/users/{id}/playlists",
                 Name = item.Name,
                 SnapshotId = item.Snapshot_id,
             };
-            var oldVersion = user!.Playlists.Find(p => p.Id == newVersion.Id);
+            var oldVersion = user?.Playlists?.Find(p => p.Id == newVersion.Id);
             if (oldVersion is null || oldVersion.SnapshotId != newVersion.SnapshotId)
             {
                 await mediator.Publish(new PlaylistTracksChanged(newVersion.Id));
@@ -87,11 +89,12 @@ app.MapPut("/users/{id}/playlists",
         }
 
         user!.Playlists = newPlaylists;
+        await db.SaveChangesAsync();
 
         // our client will show when user is browsing stale playlist
         // when the tracks are updated, client will receive a message PlaylistTracksSynced and fetch GET /playlists/{id}/tracks
 
-        return user.Playlists;
+        return Results.Ok(user.Playlists);
     });
 
 

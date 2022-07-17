@@ -1,5 +1,6 @@
 using Haly.WebApp.Data;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Haly.WebApp.Extensions;
 
@@ -9,7 +10,12 @@ public static class WebApplicationExtensions
     {
         var serviceScopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
         using var serviceScope = serviceScopeFactory.CreateScope();
-        using var db = serviceScope.ServiceProvider.GetRequiredService<LibraryContext>();
-        db.Database.Migrate();
+        using var ctx = serviceScope.ServiceProvider.GetRequiredService<LibraryContext>();
+        ctx.Database.Migrate();
+
+        // If any migration changed our enums, we need to call ReloadTypes to pick up the changes.
+        using var connection = (NpgsqlConnection)ctx.Database.GetDbConnection();
+        connection.Open();
+        connection.ReloadTypes();
     }
 }

@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
 import { PlaylistDto } from "./Playlist";
 import { styled } from "./theme";
-import { useAuth } from "react-oidc-context";
 import SpotifyAttribution from "./SpotifyAttribution";
 import useResize from "./useResize";
 
-const SidebarWrapper = styled("nav", {
+const Nav = styled("nav", {
     minWidth: 100,
     width: 240,
     position: "fixed",
@@ -15,18 +14,18 @@ const SidebarWrapper = styled("nav", {
     userSelect: "none",
 });
 
-const Playlists = styled("ul", {
+const SidebarWrapper = styled("ul", {
     margin: 0,
     padding: 0,
     listStyle: "none",
     "& > hr": {
-        marginBottom: "$500",
+        margin: "$600 0",
     },
     "& a": {
         color: "$white",
         textDecoration: "none",
     },
-    "& > button": {
+    "& > a": {
         color: "$white",
         background: "inherit",
         outline: "none",
@@ -38,7 +37,7 @@ const Playlists = styled("ul", {
 });
 
 const SidebarItem = styled("li", {
-    margin: "0 $spotifyLogo $spotifyLogo",
+    margin: "0 $spotifyLogo $300",
     cursor: "pointer",
 });
 
@@ -60,12 +59,11 @@ type OwnProps = {
 };
 
 function Sidebar(props: OwnProps) {
-    const auth = useAuth();
     const { width, enableResize } = useResize({ defaultWidth: 240, minWidth: 150, maxWidth: 340 });
 
     let playlistsJsx;
     if (props.playlists.length === 0) {
-        playlistsJsx = <p>No playlists</p>;
+        playlistsJsx = null;
     } else {
         playlistsJsx = props.playlists.map((p) => {
             const to = `playlists/${p.id}`;
@@ -79,15 +77,15 @@ function Sidebar(props: OwnProps) {
     }
 
     return (
-        <SidebarWrapper style={{ width }} onMouseDown={enableResize}>
-            <Playlists>
+        <Nav style={{ width }} onMouseDown={enableResize}>
+            <SidebarWrapper>
                 <SpotifyAttribution />
-                <button onClick={() => auth.removeUser()}>Log out</button>
+                <Link to={"/"}>Home</Link>
                 <hr />
                 {playlistsJsx}
-            </Playlists>
+            </SidebarWrapper>
             <Dragger />
-        </SidebarWrapper>
+        </Nav>
     );
 }
 

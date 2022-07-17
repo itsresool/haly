@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { PlaylistDto } from "./Playlist";
 
 type HomeProps = {
+    userId: string;
     setPlaylists: Dispatch<SetStateAction<PlaylistDto[]>>;
 };
 
@@ -13,7 +14,8 @@ export function Home(props: HomeProps) {
 
     async function fetchPlaylists() {
         try {
-            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/playlist`, {
+            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/users/${props.userId}/playlists`, {
+                method: "PUT",
                 headers: { "x-haly-token": auth.user!.access_token! },
             });
             if (resp.ok) {
