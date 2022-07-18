@@ -3,6 +3,8 @@ import { PlaylistDto } from "./Playlist";
 import { styled } from "./theme";
 import SpotifyAttribution from "./SpotifyAttribution";
 import useResize from "./useResize";
+import { useQuery } from "react-query";
+import { useAuth } from "react-oidc-context";
 
 const Nav = styled("nav", {
     minWidth: 100,
@@ -55,17 +57,41 @@ const Dragger = styled("div", {
 });
 
 type OwnProps = {
-    playlists: PlaylistDto[];
+    userId: string;
 };
 
 function Sidebar(props: OwnProps) {
+    const auth = useAuth();
     const { width, enableResize } = useResize({ defaultWidth: 240, minWidth: 150, maxWidth: 340 });
 
+    async function fetchPlaylists() {
+        try {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            setTimeout(() => {}, 100000);
+            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/users/${props.userId}/playlists`, {
+                method: "PUT",
+                headers: { "x-haly-token": auth.user!.access_token! },
+            });
+            if (resp.ok) {
+                console.log("Playlists:", resp.statusText);
+                return resp.json();
+            }
+        } catch (e) {
+            console.error(e);
+            throw e;
+        }
+    }
+
+    const { data: playlists } = useQuery<PlaylistDto[]>(["user", "playlists"], fetchPlaylists, {
+        suspense: true,
+        useErrorBoundary: false,
+    });
+
     let playlistsJsx;
-    if (props.playlists.length === 0) {
+    if (playlists!.length === 0) {
         playlistsJsx = null;
     } else {
-        playlistsJsx = props.playlists.map((p) => {
+        playlistsJsx = playlists!.map((p) => {
             const to = `playlists/${p.id}`;
 
             return (

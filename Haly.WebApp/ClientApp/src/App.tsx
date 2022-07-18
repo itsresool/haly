@@ -1,13 +1,15 @@
 import { useAuth } from "react-oidc-context";
-import { useEffect, useState } from "react";
+import React from "react";
 import Sidebar from "./Sidebar";
 import { Route, Routes } from "react-router-dom";
-import Playlist, { PlaylistDto } from "./Playlist";
+import Playlist from "./Playlist";
 import UserDropdown from "./UserDropdown";
 import { Home } from "./Home";
 import { styled } from "./theme";
 import Profile from "./Profile";
 import HalySettings from "./HalySettings";
+import { useQuery } from "react-query";
+import { Waveform } from "@uiball/loaders";
 
 const LoginWrapper = styled("div", {
     width: "40vw",
@@ -44,8 +46,6 @@ export type User = {
 
 function AppContent() {
     const auth = useAuth();
-    const [playlists, setPlaylists] = useState<PlaylistDto[]>([]);
-    const [user, setUser] = useState<User>();
 
     async function fetchUser() {
         try {
@@ -54,27 +54,27 @@ function AppContent() {
                 headers: { "x-haly-token": auth.user!.access_token! },
             });
             if (resp.ok) {
-                console.log(resp.statusText);
-                setUser(await resp.json());
+                console.log("User:", resp.statusText);
+                return await resp.json();
             }
         } catch (e) {
             console.error(e);
         }
     }
 
-    useEffect(() => {
-        fetchUser();
-    }, []);
+    const { data: user, isLoading } = useQuery<User>(["user"], fetchUser);
 
-    if (!user) return null;
+    if (isLoading || !user) return null;
 
     return (
         <>
             <UserDropdown user={user} />
-            <Sidebar playlists={playlists} />
+            <React.Suspense fallback={<Waveform />}>
+                <Sidebar userId={user.id} />
+            </React.Suspense>
             <Main>
                 <Routes>
-                    <Route path="/" element={<Home userId={user.id} setPlaylists={setPlaylists} />} />
+                    <Route path="/" element={<Home />} />
                     <Route path="/playlists/:id" element={<Playlist />} />
                     <Route path="/me" element={<Profile />} />
                     <Route path="/me/appsettings" element={<HalySettings />} />
