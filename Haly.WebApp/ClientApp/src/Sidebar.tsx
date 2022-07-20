@@ -5,6 +5,7 @@ import SpotifyAttribution from "./SpotifyAttribution";
 import useResize from "./useResize";
 import { useQuery } from "react-query";
 import { useAuth } from "react-oidc-context";
+import { Waveform } from "@uiball/loaders";
 
 const Nav = styled("nav", {
     minWidth: 100,
@@ -82,14 +83,11 @@ function Sidebar(props: OwnProps) {
         }
     }
 
-    const { data: playlists } = useQuery<PlaylistDto[]>(["user", "playlists"], fetchPlaylists, {
-        suspense: true,
-        useErrorBoundary: false,
-    });
+    const { data: playlists } = useQuery<PlaylistDto[]>(["user", "playlists"], fetchPlaylists);
 
     let playlistsJsx;
-    if (playlists!.length === 0) {
-        playlistsJsx = null;
+    if (!playlists || playlists.length === 0) {
+        playlistsJsx = <Waveform />;
     } else {
         playlistsJsx = playlists!.map((p) => {
             const to = `playlists/${p.id}`;

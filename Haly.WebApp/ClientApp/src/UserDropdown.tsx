@@ -4,7 +4,8 @@ import { MdArrowDropDown } from "react-icons/all";
 import { AccessibleIcon } from "@radix-ui/react-accessible-icon";
 import { useAuth } from "react-oidc-context";
 import { useNavigate } from "react-router-dom";
-import { User } from "./App";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
 
 const StyledTrigger = styled(DropdownMenu.Trigger, {
     height: "32px",
@@ -72,13 +73,10 @@ const StyledSeparator = styled(DropdownMenu.Separator, {
     backgroundColor: "$black700HoverOfAHover",
 });
 
-type OwnProps = {
-    user: User;
-};
-
-function UserDropdown(props: OwnProps) {
+function UserDropdown() {
     const auth = useAuth();
     const navigate = useNavigate();
+    const user = useContext(UserContext);
 
     const profileHref = `/me`;
     const appSettingsHref = `${profileHref}/appsettings`;
@@ -86,7 +84,7 @@ function UserDropdown(props: OwnProps) {
     return (
         <DropdownMenu.Root>
             <StyledTrigger>
-                <StyledTriggerSpan>{props.user.name}</StyledTriggerSpan>
+                <StyledTriggerSpan>{user.name}</StyledTriggerSpan>
                 <AccessibleIcon label="User actions">
                     <StyledArrorDown />
                 </AccessibleIcon>
@@ -94,11 +92,8 @@ function UserDropdown(props: OwnProps) {
 
             <StyledDropdownContent>
                 <StyledDropdownItem onClick={() => navigate(profileHref)}>Profile</StyledDropdownItem>
-
                 <StyledDropdownItem onClick={() => navigate(appSettingsHref)}>Haly Settings</StyledDropdownItem>
-
                 <StyledSeparator />
-
                 <StyledDropdownItem onClick={() => auth.removeUser()}>Log out</StyledDropdownItem>
             </StyledDropdownContent>
         </DropdownMenu.Root>

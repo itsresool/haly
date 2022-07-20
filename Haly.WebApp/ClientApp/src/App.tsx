@@ -1,36 +1,17 @@
-import { useAuth } from "react-oidc-context";
-import React from "react";
-import Sidebar from "./Sidebar";
-import { Route, Routes } from "react-router-dom";
-import Playlist from "./Playlist";
-import UserDropdown from "./UserDropdown";
-import { Home } from "./Home";
 import { styled } from "./theme";
-import Profile from "./Profile";
-import HalySettings from "./HalySettings";
-import { useQuery } from "react-query";
+import useAccessToken from "./useAccessToken";
+import { useQuery, useQueryErrorResetBoundary } from "react-query";
 import { Waveform } from "@uiball/loaders";
-
-const LoginWrapper = styled("div", {
-    width: "40vw",
-    margin: "$900 auto",
-    color: "$black700",
-    textAlign: "center",
-    "& h1": {
-        marginBottom: "$500",
-    },
-});
-
-function LoginScreen() {
-    const auth = useAuth();
-
-    return (
-        <LoginWrapper>
-            <h1>HALY</h1>
-            <button onClick={() => auth.signinRedirect()}>Log in</button>
-        </LoginWrapper>
-    );
-}
+import Playlist from "./Playlist";
+import HalySettings from "./HalySettings";
+import UserDropdown from "./UserDropdown";
+import { Route, Routes } from "react-router-dom";
+import { Home } from "./Home";
+import Sidebar from "./Sidebar";
+import Profile from "./Profile";
+import React from "react";
+import { UserContext } from "./UserContext";
+import { FallbackProps } from "react-error-boundary";
 
 const Main = styled("div", {
     position: "absolute",
@@ -38,50 +19,52 @@ const Main = styled("div", {
     margin: "$800 $700",
 });
 
-export type User = {
-    id: string;
-    name: string;
-    market: string;
-};
+async function fetchUserInfo(accessToken: string) {
+    const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/users/me`, {
+        method: "PUT",
+        headers: { "x-haly-token": accessToken },
+    });
+    if (!resp.ok) throw new Error(resp.statusText);
 
-function AppContent() {
-    const auth = useAuth();
+    console.log("User:", resp.statusText);
+    return resp.json();
+}
 
-    async function fetchUser() {
-        try {
-            const resp = await fetch(`${import.meta.env.VITE_API_ORIGIN}/users/me`, {
-                method: "PUT",
-                headers: { "x-haly-token": auth.user!.access_token! },
-            });
-            if (resp.ok) {
-                console.log("User:", resp.statusText);
-                return await resp.json();
-            }
-        } catch (e) {
-            console.error(e);
-        }
-    }
+function App() {
+    const accessToken = useAccessToken();
+    const { isLoading, data: user, error } = useQuery(["users", "me"], () => fetchUserInfo(accessToken));
 
-    const { data: user, isLoading } = useQuery<User>(["user"], fetchUser);
-
-    if (isLoading || !user) return null;
+    if (error) return <h1 style={{ color: "red" }}>App error</h1>;
+    if (isLoading || !user) return <h1>App is loading</h1>;
 
     return (
-        <>
-            <UserDropdown user={user} />
-            <React.Suspense fallback={<Waveform />}>
-                <Sidebar userId={user.id} />
-            </React.Suspense>
+        <UserContext.Provider value={user}>
+            <UserDropdown />
+            <Sidebar userId={user.id} />
             <Main>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/playlists/:id" element={<Playlist />} />
-                    <Route path="/me" element={<Profile />} />
-                    <Route path="/me/appsettings" element={<HalySettings />} />
-                </Routes>
+                <React.Suspense fallback={<Waveform />}>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/playlists/:id" element={<Playlist />} />
+                        <Route path="/me" element={<Profile />} />
+                        <Route path="/me/appsettings" element={<HalySettings />} />
+                    </Routes>
+                </React.Suspense>
             </Main>
-        </>
+        </UserContext.Provider>
     );
 }
 
-export default { Content: AppContent, Login: LoginScreen };
+export function AppFallback(props: FallbackProps) {
+    const { reset } = useQueryErrorResetBoundary();
+
+    return (
+        <div>
+            <h1>Something went wrong</h1>
+            <pre>{props.error.message}</pre>
+            <button onClick={reset}>Try again</button>
+        </div>
+    );
+}
+
+export default App;
